@@ -185,7 +185,7 @@ body::before {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.1rem clamp(1.4rem, 5vw, 3.5rem);
   transition: background 0.4s var(--ease), padding 0.4s var(--ease), border-color 0.4s var(--ease);
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid rgba(201,162,39,0.08);
 }
 .nav.is-scrolled {
   background: rgba(6, 9, 19, 0.78);
@@ -256,6 +256,13 @@ body::before {
 .balloon::after {
   content: ''; position: absolute; left: 50%; top: 100%; width: 1px; height: 46px;
   background: rgba(247,244,236,0.35); transform: translateX(-50%);
+}
+.balloon::before {
+  content: ''; position: absolute; top: 14%; left: 22%; width: 34%; height: 22%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  filter: blur(1px);
+  transform: rotate(-25deg);
 }
 @keyframes floatUp {
   0% { transform: translateY(0) translateX(0) rotate(-4deg); }
@@ -689,8 +696,9 @@ body::before {
 .wish__ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
 .wish__track { fill: none; stroke: rgba(247,244,236,0.08); stroke-width: 4; }
 .wish__fill {
-  fill: none; stroke: url(#none); stroke: var(--gold-light); stroke-width: 4; stroke-linecap: round;
+  fill: none; stroke: url(#goldGrad); stroke-width: 4; stroke-linecap: round;
   stroke-dasharray: 327; stroke-dashoffset: 327;
+  filter: drop-shadow(0 0 4px rgba(240,214,138,0.35));
   transition: stroke-dashoffset 1.8s var(--ease);
 }
 .wish__number {
@@ -772,4 +780,199 @@ body::before {
 @media (max-width: 500px) {
   .hero__typing-wrap { max-width: 26ch; }
   .music-toggle { width: 42px; height: 42px; top: 1rem; right: 1rem; }
+}
+ 
+/* ==========================================================================
+   PREMIUM ELEVATION PASS
+   Grain, cursor glow, scroll progress, ornate frames, dividers, shine FX
+   ========================================================================== */
+ 
+/* ---------- Grain texture (subtle print-like depth) ---------- */
+.grain-overlay {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  opacity: 0.035; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+ 
+/* ---------- Cursor glow (desktop only, signature touch) ---------- */
+.cursor-glow {
+  position: fixed; top: 0; left: 0; z-index: 3; pointer-events: none;
+  width: 420px; height: 420px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(201,162,39,0.10), rgba(54,84,201,0.05) 45%, transparent 72%);
+  opacity: 0; transition: opacity 0.5s var(--ease);
+  will-change: transform;
+}
+.cursor-glow.is-active { opacity: 1; }
+@media (pointer: coarse) { .cursor-glow { display: none; } }
+ 
+/* ---------- Scroll progress bar ---------- */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 190;
+  background: rgba(247,244,236,0.06);
+}
+.scroll-progress__fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  box-shadow: 0 0 8px rgba(240,214,138,0.6);
+  transition: width 0.1s linear;
+}
+ 
+/* ---------- Section dividers ---------- */
+.divider {
+  display: flex; justify-content: center; padding: 0.5rem 1.5rem;
+  max-width: 240px; margin: 0 auto;
+}
+.divider svg { width: 100%; height: 22px; opacity: 0.75; }
+ 
+/* ---------- Nav active link ---------- */
+.nav__links a.is-active { color: var(--gold-light); }
+.nav__links a.is-active::after { width: 100%; }
+ 
+/* ---------- Hero ornate corner frame ---------- */
+.hero__ornate-frame {
+  position: absolute; top: 92px; left: clamp(14px, 2.4vw, 28px); right: clamp(14px, 2.4vw, 28px); bottom: clamp(14px, 2.4vw, 28px);
+  z-index: 2;
+  pointer-events: none;
+}
+.hero__corner { position: absolute; width: clamp(50px, 6vw, 90px); height: clamp(50px, 6vw, 90px); opacity: 0.85; }
+.hero__corner--tl { top: 0; left: 0; }
+.hero__corner--tr { top: 0; right: 0; }
+.hero__corner--bl { bottom: 0; left: 0; }
+.hero__corner--br { bottom: 0; right: 0; }
+ 
+.hero__eyebrow { display: flex; align-items: center; gap: 0.7rem; }
+.hero__eyebrow-line { display: inline-block; width: 28px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-light)); }
+ 
+.hero__flourish { width: 150px; height: 16px; margin: 0.3rem 0 1.3rem; display: block; }
+ 
+/* ---------- Sparkle field (drifting light motes in hero) ---------- */
+.sparkle-field { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+.sparkle-mote {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,214,138,0.9), rgba(240,214,138,0));
+  animation-name: moteDrift; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
+}
+@keyframes moteDrift {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.15; }
+  50% { transform: translateY(-26px) translateX(10px); opacity: 0.55; }
+}
+ 
+/* ---------- Message: corners + wax seal ---------- */
+.message__card { position: relative; }
+.message__corner {
+  position: absolute; width: 26px; height: 26px;
+  border: 1px solid var(--gold-soft); opacity: 0.7;
+}
+.message__corner--tl { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+.message__corner--tr { top: 14px; right: 14px; border-left: none; border-bottom: none; }
+.message__corner--bl { bottom: 14px; left: 14px; border-right: none; border-top: none; }
+.message__corner--br { bottom: 14px; right: 14px; border-left: none; border-top: none; }
+ 
+.message__seal {
+  position: absolute; top: -26px; left: 50%; transform: translateX(-50%);
+  width: 54px; height: 54px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+}
+.message__seal svg { width: 100%; height: 100%; }
+ 
+/* ---------- Gift box: shine sweep + hanging tag ---------- */
+.gift__shine {
+  position: absolute; top: -20%; left: -60%; width: 22%; height: 140%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.22) 45%, transparent 60%);
+  transform: rotate(18deg);
+  animation: giftShine 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes giftShine {
+  0%, 60%, 100% { left: -60%; }
+  35% { left: 130%; }
+}
+ 
+.gift__tag {
+  position: absolute; top: 18px; right: -14px;
+  background: linear-gradient(155deg, var(--white), #ECE6D6);
+  color: var(--navy); font-family: var(--font-display); font-style: italic; font-weight: 600;
+  font-size: 0.68rem; padding: 3px 9px 3px 7px;
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+  transform: rotate(8deg);
+}
+.gift__tag::before {
+  content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--navy);
+}
+ 
+/* ---------- Gift photo: ornate corner frame ---------- */
+.gift__corner { position: absolute; width: 18px; height: 18px; z-index: 2; opacity: 0.9; }
+.gift__corner--tl { top: 8px; left: 8px; border-top: 1.5px solid var(--gold-light); border-left: 1.5px solid var(--gold-light); }
+.gift__corner--tr { top: 8px; right: 8px; border-top: 1.5px solid var(--gold-light); border-right: 1.5px solid var(--gold-light); }
+.gift__corner--bl { bottom: 8px; left: 8px; border-bottom: 1.5px solid var(--gold-light); border-left: 1.5px solid var(--gold-light); }
+.gift__corner--br { bottom: 8px; right: 8px; border-bottom: 1.5px solid var(--gold-light); border-right: 1.5px solid var(--gold-light); }
+ 
+/* ---------- Special cards: gold edge glow + icon ring ---------- */
+.special-card { position: relative; overflow: hidden; }
+.special-card::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(140deg, var(--gold-light), transparent 30%, transparent 70%, var(--gold-light));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity 0.45s var(--ease);
+  pointer-events: none;
+}
+.special-card:hover::after { opacity: 1; }
+.special-card__icon { position: relative; transition: transform 0.5s var(--ease); }
+.special-card__icon::before {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%;
+  border: 1px dashed rgba(201,162,39,0.4);
+  opacity: 0; transform: scale(0.85); transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.special-card:hover .special-card__icon::before { opacity: 1; transform: scale(1) rotate(35deg); }
+.special-card:hover .special-card__icon { transform: scale(1.08); }
+ 
+/* ---------- Timeline: animated gold fill line ---------- */
+.timeline__line-fill {
+  position: absolute; top: 0; left: 50%; width: 2px; height: 0%;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  box-shadow: 0 0 10px rgba(240,214,138,0.5);
+  transform: translateX(-50%);
+  transition: height 0.15s linear;
+  z-index: 0;
+}
+@media (max-width: 720px) { .timeline__line-fill { left: 22px; } }
+ 
+/* ---------- Surprise: cake illustration + button shine ---------- */
+.surprise__cake { width: 96px; margin: 0 auto 1.2rem; }
+.surprise__flame { animation: flicker 1.6s ease-in-out infinite; transform-origin: 60px 8px; }
+@keyframes flicker {
+  0%, 100% { opacity: 1; transform: scaleY(1) rotate(0deg); }
+  50% { opacity: 0.75; transform: scaleY(0.88) rotate(-3deg); }
+}
+ 
+.surprise__btn { position: relative; overflow: hidden; }
+.surprise__btn-shine {
+  position: absolute; top: 0; left: -40%; width: 30%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: skewX(-20deg);
+  animation: btnShine 3.2s ease-in-out infinite;
+}
+@keyframes btnShine {
+  0%, 55%, 100% { left: -40%; }
+  30% { left: 120%; }
+}
+ 
+/* ---------- Footer flourish ---------- */
+.footer__flourish { width: 140px; height: 18px; margin: 0 auto 1.4rem; display: block; opacity: 0.8; }
+ 
+/* ---------- Refined type rhythm ---------- */
+.section-title { letter-spacing: -0.01em; }
+ 
+/* ---------- Wishes ring: completion glow pulse ---------- */
+.wish__ring.is-complete .wish__fill { filter: drop-shadow(0 0 9px rgba(240,214,138,0.75)); }
+.wish__ring.is-complete .wish__number { animation: numberPop 0.5s var(--ease); }
+@keyframes numberPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); color: var(--gold-light); }
+  100% { transform: scale(1); }
 }
