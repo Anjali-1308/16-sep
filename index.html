@@ -22,6 +22,26 @@
 </head>
 <body>
  
+<!-- ============ SHARED SVG DEFS ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0D68A"/>
+      <stop offset="50%" stop-color="#C9A227"/>
+      <stop offset="100%" stop-color="#F0D68A"/>
+    </linearGradient>
+    <linearGradient id="goldGradVertical" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F0D68A"/>
+      <stop offset="100%" stop-color="#C9A227"/>
+    </linearGradient>
+  </defs>
+</svg>
+ 
+<!-- ============ AMBIENT / CHROME LAYERS ============ -->
+<div class="grain-overlay" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__fill" id="scrollProgress"></div></div>
+ 
 <!-- ============ PRELOADER ============ -->
 <div class="preloader" id="preloader">
   <div class="preloader__monogram">
@@ -45,7 +65,7 @@
   <span class="music-toggle__bars"><i></i><i></i><i></i></span>
 </button>
 <audio id="bgMusic" loop preload="none">
-  <source src="birthday-tune.mp3" type="audio/mpeg">
+  <source src="assets/birthday-tune.mp3" type="audio/mpeg">
 </audio>
  
 <!-- ============ NAV ============ -->
@@ -66,20 +86,33 @@
 <!-- ============ 1. HERO ============ -->
 <header class="hero" id="hero">
   <div class="hero__bg-wrap">
-    <div class="hero__bg" style="background-image:url('solo.jpg')"></div>
+    <div class="hero__bg" style="background-image:url('assets/solo.jpg')"></div>
     <div class="hero__overlay"></div>
     <div class="hero__vignette"></div>
   </div>
  
+  <div class="hero__ornate-frame" aria-hidden="true">
+    <svg class="hero__corner hero__corner--tl" viewBox="0 0 90 90" fill="none"><path d="M2 90V22C2 10.95 10.95 2 22 2H90" stroke="url(#goldGrad)" stroke-width="1.4"/><circle cx="2" cy="90" r="2.4" fill="#F0D68A"/></svg>
+    <svg class="hero__corner hero__corner--tr" viewBox="0 0 90 90" fill="none"><path d="M88 90V22C88 10.95 79.05 2 68 2H0" stroke="url(#goldGrad)" stroke-width="1.4"/><circle cx="88" cy="90" r="2.4" fill="#F0D68A"/></svg>
+    <svg class="hero__corner hero__corner--bl" viewBox="0 0 90 90" fill="none"><path d="M2 0v68C2 79.05 10.95 88 22 88H90" stroke="url(#goldGrad)" stroke-width="1.4"/><circle cx="2" cy="0" r="2.4" fill="#F0D68A"/></svg>
+    <svg class="hero__corner hero__corner--br" viewBox="0 0 90 90" fill="none"><path d="M88 0v68C88 79.05 79.05 88 68 88H0" stroke="url(#goldGrad)" stroke-width="1.4"/><circle cx="88" cy="0" r="2.4" fill="#F0D68A"/></svg>
+  </div>
+ 
   <div class="balloons" id="balloons" aria-hidden="true"></div>
+  <div class="sparkle-field" id="sparkleField" aria-hidden="true"></div>
  
   <div class="hero__frame">
     <div class="hero__content">
-      <p class="hero__eyebrow" data-aos="fade-down" data-aos-delay="200">A Little Gift From Your Sister</p>
+      <p class="hero__eyebrow" data-aos="fade-down" data-aos-delay="200"><span class="hero__eyebrow-line"></span>A Little Gift From Your Sister</p>
       <h1 class="hero__title">
         <span class="hero__title-line" data-aos="fade-up" data-aos-delay="400">Happy Birthday</span>
-        <span class="hero__title-line hero__title-line--gold" data-aos="fade-up" data-aos-delay="600">Dear Brother </span>
+        <span class="hero__title-line hero__title-line--gold" data-aos="fade-up" data-aos-delay="600">Dear Brother <span class="heart-beat">❤️</span></span>
       </h1>
+      <svg class="hero__flourish" data-aos="fade-up" data-aos-delay="750" viewBox="0 0 180 20" fill="none" aria-hidden="true">
+        <path d="M0 10h60M120 10h60" stroke="url(#goldGrad)" stroke-width="1"/>
+        <path d="M78 10c0-5 4-9 9-9s9 4 9 9-4 9-9 9-9-4-9-9Z" stroke="url(#goldGrad)" stroke-width="1"/>
+        <circle cx="87" cy="10" r="2" fill="#F0D68A"/>
+      </svg>
       <p class="hero__typing-wrap" data-aos="fade-up" data-aos-delay="900">
         <span class="hero__typing" id="typingText"></span><span class="hero__cursor">|</span>
       </p>
@@ -99,6 +132,13 @@
     <div class="message__container" data-aos="fade-up">
       <p class="section-kicker">From My Heart To Yours</p>
       <div class="glass-card message__card">
+        <span class="message__corner message__corner--tl" aria-hidden="true"></span>
+        <span class="message__corner message__corner--tr" aria-hidden="true"></span>
+        <span class="message__corner message__corner--bl" aria-hidden="true"></span>
+        <span class="message__corner message__corner--br" aria-hidden="true"></span>
+        <div class="message__seal" aria-hidden="true">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="url(#goldGrad)" stroke-width="1.2"/><text x="30" y="38" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="26" fill="#F0D68A">B</text></svg>
+        </div>
         <p class="message__salutation">Dear Bhai,</p>
         <p class="message__body">
           You are not just my brother, you are my strength, my guide, and my best friend.
@@ -112,6 +152,8 @@
       </div>
     </div>
   </section>
+ 
+  <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 24"><path d="M0 12h70M130 12h70" stroke="url(#goldGrad)" stroke-width="1"/><path d="M100 2 108 12 100 22 92 12Z" stroke="url(#goldGrad)" stroke-width="1" fill="none"/></svg></div>
  
   <!-- ============ 3. MEMORY GALLERY ============ -->
   <section class="gallery" id="gallery">
@@ -133,11 +175,17 @@
                 <div class="gift__ribbon-v"></div>
                 <div class="gift__ribbon-h"></div>
                 <div class="gift__bow"><i></i><i></i><em></em></div>
+                <span class="gift__tag">To: Bhai</span>
               </div>
+              <div class="gift__shine"></div>
               <p class="gift__hint">Tap to open</p>
             </div>
             <div class="gift__face gift__face--photo">
-              <img src="solo.jpg" alt="Brother standing at the ghats, a quiet travel memory" loading="lazy">
+              <img src="assets/solo.jpg" alt="Brother standing at the ghats, a quiet travel memory" loading="lazy">
+              <span class="gift__corner gift__corner--tl"></span>
+              <span class="gift__corner gift__corner--tr"></span>
+              <span class="gift__corner gift__corner--bl"></span>
+              <span class="gift__corner gift__corner--br"></span>
               <span class="gift__caption">A quiet evening, far from home</span>
               <button class="gift__expand" type="button" aria-label="View full photo">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -157,11 +205,17 @@
                 <div class="gift__ribbon-v"></div>
                 <div class="gift__ribbon-h"></div>
                 <div class="gift__bow"><i></i><i></i><em></em></div>
+                <span class="gift__tag">To: Bhai</span>
               </div>
+              <div class="gift__shine"></div>
               <p class="gift__hint">Tap to open</p>
             </div>
             <div class="gift__face gift__face--photo">
-              <img src="couple.jpeg" alt="Brother and sister together at a family celebration" loading="lazy">
+              <img src="assets/couple.jpeg" alt="Brother and sister together at a family celebration" loading="lazy">
+              <span class="gift__corner gift__corner--tl"></span>
+              <span class="gift__corner gift__corner--tr"></span>
+              <span class="gift__corner gift__corner--bl"></span>
+              <span class="gift__corner gift__corner--br"></span>
               <span class="gift__caption">Together, like always</span>
               <button class="gift__expand" type="button" aria-label="View full photo">
                 <svg viewBox="0 0 24 24" fill="none"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -238,6 +292,8 @@
     </div>
   </section>
  
+  <div class="divider" aria-hidden="true"><svg viewBox="0 0 200 24"><path d="M0 12h70M130 12h70" stroke="url(#goldGrad)" stroke-width="1"/><path d="M100 2 108 12 100 22 92 12Z" stroke="url(#goldGrad)" stroke-width="1" fill="none"/></svg></div>
+ 
   <!-- ============ 5. TIMELINE ============ -->
   <section class="timeline" id="timeline">
     <div class="section-head" data-aos="fade-up">
@@ -297,17 +353,30 @@
       </div>
  
       <div class="timeline__line" aria-hidden="true"></div>
+      <div class="timeline__line-fill" id="timelineFill" aria-hidden="true"></div>
     </div>
   </section>
  
   <!-- ============ 6. SURPRISE ============ -->
   <section class="surprise" id="surprise">
     <div class="surprise__inner" data-aos="zoom-in">
+      <div class="surprise__cake" aria-hidden="true">
+        <svg viewBox="0 0 120 100" fill="none">
+          <ellipse cx="60" cy="86" rx="46" ry="8" fill="url(#goldGrad)" opacity="0.18"/>
+          <rect x="18" y="58" width="84" height="26" rx="4" fill="url(#goldGrad)" opacity="0.14" stroke="url(#goldGrad)" stroke-width="1"/>
+          <rect x="26" y="40" width="68" height="22" rx="4" fill="url(#goldGrad)" opacity="0.2" stroke="url(#goldGrad)" stroke-width="1"/>
+          <rect x="36" y="24" width="48" height="18" rx="4" fill="url(#goldGrad)" opacity="0.26" stroke="url(#goldGrad)" stroke-width="1"/>
+          <rect x="57" y="10" width="6" height="16" rx="2" fill="#F0D68A"/>
+          <path class="surprise__flame" d="M60 3c3 4 3 7 0 10-3-3-3-6 0-10Z" fill="#F0D68A"/>
+          <circle cx="40" cy="52" r="1.6" fill="#F0D68A"/><circle cx="52" cy="52" r="1.6" fill="#F0D68A"/><circle cx="68" cy="52" r="1.6" fill="#F0D68A"/><circle cx="80" cy="52" r="1.6" fill="#F0D68A"/>
+        </svg>
+      </div>
       <p class="section-kicker section-kicker--light">One Last Thing</p>
       <h2 class="section-title section-title--light">There's A Little Surprise Waiting</h2>
  
       <button class="surprise__btn" id="surpriseBtn">
-        <span>Click For A Surprise</span> <span class="surprise__emoji">🎁</span>
+        <span class="surprise__btn-shine"></span>
+        <span class="surprise__btn-label">Click For A Surprise</span> <span class="surprise__emoji">🎁</span>
       </button>
  
       <div class="surprise__reveal" id="surpriseReveal">
@@ -329,7 +398,7 @@
     <div class="wishes__grid">
       <div class="wish" data-aos="fade-up" data-aos-delay="0">
         <div class="wish__ring">
-          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100"/></svg>
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100" stroke="url(#goldGrad)"/></svg>
           <span class="wish__number" data-count="100">0</span>
         </div>
         <p class="wish__label">Happiness</p>
@@ -337,7 +406,7 @@
  
       <div class="wish" data-aos="fade-up" data-aos-delay="100">
         <div class="wish__ring">
-          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100"/></svg>
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100" stroke="url(#goldGrad)"/></svg>
           <span class="wish__number" data-count="100">0</span>
         </div>
         <p class="wish__label">Success</p>
@@ -345,7 +414,7 @@
  
       <div class="wish" data-aos="fade-up" data-aos-delay="200">
         <div class="wish__ring">
-          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100"/></svg>
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100" stroke="url(#goldGrad)"/></svg>
           <span class="wish__number" data-count="100">0</span>
         </div>
         <p class="wish__label">Love</p>
@@ -353,7 +422,7 @@
  
       <div class="wish" data-aos="fade-up" data-aos-delay="300">
         <div class="wish__ring">
-          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100"/></svg>
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wish__track"/><circle cx="60" cy="60" r="52" class="wish__fill" data-target="100" stroke="url(#goldGrad)"/></svg>
           <span class="wish__number" data-count="100">0</span>
         </div>
         <p class="wish__label">Health</p>
@@ -365,6 +434,7 @@
  
 <!-- ============ 8. FOOTER ============ -->
 <footer class="footer">
+  <svg class="footer__flourish" viewBox="0 0 200 24" aria-hidden="true"><path d="M0 12h70M130 12h70" stroke="url(#goldGrad)" stroke-width="1"/><path d="M100 2 108 12 100 22 92 12Z" stroke="url(#goldGrad)" stroke-width="1" fill="none"/></svg>
   <a href="#hero" class="footer__monogram">B<span>.</span></a>
   <p class="footer__msg">Made with <span class="heart-beat">❤️</span> by your Sister</p>
   <p class="footer__sub">Happy Birthday, Bhai — today and always.</p>
@@ -380,3 +450,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+ 
