@@ -1,9 +1,9 @@
 /* ==========================================================================
    Happy Birthday Bhai — Script
    ========================================================================== */
-
+ 
 document.addEventListener('DOMContentLoaded', () => {
-
+ 
   /* ---------------------------------------------------------------------
      Preloader
      --------------------------------------------------------------------- */
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startHeroSequence();
     }
   }, 3200);
-
+ 
   /* ---------------------------------------------------------------------
      AOS init
      --------------------------------------------------------------------- */
@@ -34,20 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
       offset: 60,
     });
   }
-
+ 
   /* ---------------------------------------------------------------------
      Nav: scroll state + mobile toggle
      --------------------------------------------------------------------- */
   const nav = document.getElementById('mainNav');
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
-
+ 
   const onScroll = () => {
     nav.classList.toggle('is-scrolled', window.scrollY > 40);
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-
+ 
   navToggle.addEventListener('click', () => {
     navToggle.classList.toggle('is-open');
     navLinks.classList.toggle('is-open');
@@ -58,34 +58,34 @@ document.addEventListener('DOMContentLoaded', () => {
       navLinks.classList.remove('is-open');
     });
   });
-
+ 
   /* ---------------------------------------------------------------------
      Hero parallax (subtle, on pointer + scroll)
      --------------------------------------------------------------------- */
   const heroBg = document.querySelector('.hero__bg');
   const hero = document.getElementById('hero');
-
+ 
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
     if (y < window.innerHeight * 1.2) {
       heroBg.style.transform = `translateY(${y * 0.18}px) scale(1.02)`;
     }
   }, { passive: true });
-
+ 
   hero.addEventListener('mousemove', (e) => {
     const { innerWidth, innerHeight } = window;
     const x = (e.clientX / innerWidth - 0.5) * 14;
     const y = (e.clientY / innerHeight - 0.5) * 10;
     heroBg.style.transform = `translate(${x}px, ${y}px) scale(1.04)`;
   });
-
+ 
   /* ---------------------------------------------------------------------
      Typing animation
      --------------------------------------------------------------------- */
   const typingEl = document.getElementById('typingText');
   const typingText = 'My First Friend, My Biggest Support, My Forever Hero';
   let typeIndex = 0;
-
+ 
   function typeLoop() {
     if (typeIndex <= typingText.length) {
       typingEl.textContent = typingText.slice(0, typeIndex);
@@ -93,19 +93,19 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(typeLoop, 42);
     }
   }
-
+ 
   function startHeroSequence() {
     setTimeout(typeLoop, 1100);
     spawnBalloons();
     fireConfettiBurst(60);
   }
-
+ 
   /* ---------------------------------------------------------------------
      Balloons
      --------------------------------------------------------------------- */
   const balloonColors = ['#C9A227', '#2A3E8C', '#F0D68A', '#16224A', '#E4C264'];
   const balloonsWrap = document.getElementById('balloons');
-
+ 
   function spawnBalloons() {
     const count = window.innerWidth < 600 ? 6 : 10;
     for (let i = 0; i < count; i++) {
@@ -122,13 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
       balloonsWrap.appendChild(b);
     }
   }
-
+ 
   function lighten(hex) {
     // quick lighten for balloon highlight
     const map = { '#C9A227': '#F0D68A', '#2A3E8C': '#5470D6', '#F0D68A': '#FFF3CE', '#16224A': '#33468F', '#E4C264': '#FBE7AE' };
     return map[hex] || '#ffffff';
   }
-
+ 
   /* ---------------------------------------------------------------------
      Confetti (canvas)
      --------------------------------------------------------------------- */
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cctx = confettiCanvas.getContext('2d');
   let confettiParticles = [];
   const confettiColors = ['#C9A227', '#F0D68A', '#2A3E8C', '#F7F4EC', '#E4C264'];
-
+ 
   function resizeCanvases() {
     [confettiCanvas, document.getElementById('fireworks-canvas')].forEach(c => {
       c.width = window.innerWidth * devicePixelRatio;
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   resizeCanvases();
   window.addEventListener('resize', resizeCanvases);
-
+ 
   function fireConfettiBurst(count = 80) {
     for (let i = 0; i < count; i++) {
       confettiParticles.push({
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (!confettiRunning) runConfetti();
   }
-
+ 
   let confettiRunning = false;
   function runConfetti() {
     confettiRunning = true;
@@ -200,14 +200,14 @@ document.addEventListener('DOMContentLoaded', () => {
       cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
     }
   }
-
+ 
   /* ---------------------------------------------------------------------
      Music toggle
      --------------------------------------------------------------------- */
   const musicToggle = document.getElementById('musicToggle');
   const bgMusic = document.getElementById('bgMusic');
   let musicPlaying = false;
-
+ 
   musicToggle.addEventListener('click', () => {
     if (!musicPlaying) {
       bgMusic.volume = 0.35;
@@ -228,23 +228,20 @@ document.addEventListener('DOMContentLoaded', () => {
       musicToggle.setAttribute('aria-pressed', 'false');
     }
   });
-
+ 
   /* ---------------------------------------------------------------------
      Gallery lightbox
      --------------------------------------------------------------------- */
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxClose = document.getElementById('lightboxClose');
-
-  document.querySelectorAll('.gallery__item img').forEach(img => {
-    img.addEventListener('click', () => {
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
-      lightbox.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
+ 
+  function openLightbox(img) {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
   function closeLightbox() {
     lightbox.classList.remove('is-open');
     document.body.style.overflow = '';
@@ -252,7 +249,85 @@ document.addEventListener('DOMContentLoaded', () => {
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
-
+ 
+  /* ---------------------------------------------------------------------
+     Gift boxes: tap or swipe to unwrap and reveal the photo
+     --------------------------------------------------------------------- */
+  const sparkleChars = ['✦', '✧', '❤️', '✨'];
+ 
+  function spawnGiftSparkles(giftEl) {
+    const rect = giftEl.getBoundingClientRect();
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('span');
+      s.className = 'gift__sparkle';
+      s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+      const originX = rect.width / 2;
+      const originY = rect.height / 2;
+      s.style.left = `${originX}px`;
+      s.style.top = `${originY}px`;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 60;
+      s.style.setProperty('--sx', `${Math.cos(angle) * dist}px`);
+      s.style.setProperty('--sy', `${Math.sin(angle) * dist}px`);
+      s.style.animationDelay = `${Math.random() * 0.15}s`;
+      giftEl.appendChild(s);
+      setTimeout(() => s.remove(), 950);
+    }
+  }
+ 
+  function toggleGift(giftEl) {
+    const opening = !giftEl.classList.contains('is-open');
+    giftEl.classList.toggle('is-open');
+    giftEl.setAttribute('aria-pressed', opening ? 'true' : 'false');
+    if (opening) spawnGiftSparkles(giftEl);
+  }
+ 
+  document.querySelectorAll('.gift').forEach(gift => {
+    let touchStartX = 0, touchStartY = 0, touchHandled = false, lastActionTime = 0;
+ 
+    gift.addEventListener('click', (e) => {
+      if (Date.now() - lastActionTime < 350) return; // avoid double-fire after touch
+      toggleGift(gift);
+      lastActionTime = Date.now();
+    });
+ 
+    gift.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleGift(gift);
+      }
+    });
+ 
+    gift.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchHandled = false;
+    }, { passive: true });
+ 
+    gift.addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      if (Math.abs(dx) > 28 && Math.abs(dx) > Math.abs(dy)) {
+        // deliberate horizontal swipe on the card
+        toggleGift(gift);
+        touchHandled = true;
+        lastActionTime = Date.now();
+      }
+    }, { passive: true });
+ 
+    // Expand button on the photo face -> open full lightbox, without re-wrapping the gift
+    const expandBtn = gift.querySelector('.gift__expand');
+    if (expandBtn) {
+      expandBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLightbox(gift.querySelector('.gift__face--photo img'));
+      });
+    }
+  });
+ 
   /* ---------------------------------------------------------------------
      Surprise section: fireworks + hearts + reveal
      --------------------------------------------------------------------- */
@@ -264,9 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let fireworkParticles = [];
   let fireworksRunning = false;
   let surpriseUsed = false;
-
+ 
   const fwColors = ['#C9A227', '#F0D68A', '#2A3E8C', '#F7F4EC', '#5470D6'];
-
+ 
   function launchFirework(cx, cy) {
     const count = 46;
     for (let i = 0; i < count; i++) {
@@ -284,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (!fireworksRunning) runFireworks();
   }
-
+ 
   function runFireworks() {
     fireworksRunning = true;
     fctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
@@ -309,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
     }
   }
-
+ 
   function spawnHearts(count = 22) {
     for (let i = 0; i < count; i++) {
       const h = document.createElement('span');
@@ -325,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => h.remove(), (duration + 1) * 1000);
     }
   }
-
+ 
   surpriseBtn.addEventListener('click', () => {
     const rect = fireworksCanvas.getBoundingClientRect();
     // Launch a few fireworks across the section width
@@ -335,30 +410,30 @@ document.addEventListener('DOMContentLoaded', () => {
         launchFirework(rect.width * pos, rect.height * 0.32 + (Math.random() * 60 - 30));
       }, i * 260);
     });
-
+ 
     spawnHearts(24);
     fireConfettiBurst(50);
-
+ 
     surpriseReveal.classList.add('is-visible');
-
+ 
     if (!surpriseUsed) {
       surpriseUsed = true;
       surpriseBtn.querySelector('span').textContent = 'Once More For Luck';
     }
   });
-
+ 
   /* ---------------------------------------------------------------------
      Wishes counters — animate on scroll into view
      --------------------------------------------------------------------- */
   const wishNumbers = document.querySelectorAll('.wish__number');
   const wishFills = document.querySelectorAll('.wish__fill');
   const CIRCUMFERENCE = 2 * Math.PI * 52; // r=52
-
+ 
   wishFills.forEach(fill => {
     fill.style.strokeDasharray = `${CIRCUMFERENCE}`;
     fill.style.strokeDashoffset = `${CIRCUMFERENCE}`;
   });
-
+ 
   function animateCount(el, target, duration = 1800) {
     const start = performance.now();
     function step(now) {
@@ -369,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(step);
   }
-
+ 
   const wishObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -384,7 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.4 });
-
+ 
   document.querySelectorAll('.wish').forEach(w => wishObserver.observe(w));
-
+ 
 });
+ 
