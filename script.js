@@ -60,6 +60,89 @@ document.addEventListener('DOMContentLoaded', () => {
   });
  
   /* ---------------------------------------------------------------------
+     Scroll progress bar + active nav link
+     --------------------------------------------------------------------- */
+  const scrollProgressFill = document.getElementById('scrollProgress');
+  const navLinkEls = Array.from(navLinks.querySelectorAll('a'));
+  const navSections = navLinkEls
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+ 
+  function updateScrollChrome() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgressFill.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+ 
+    let activeIndex = -1;
+    navSections.forEach((sec, i) => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.4) activeIndex = i;
+    });
+    navLinkEls.forEach((a, i) => a.classList.toggle('is-active', i === activeIndex));
+  }
+  window.addEventListener('scroll', updateScrollChrome, { passive: true });
+  updateScrollChrome();
+ 
+  /* ---------------------------------------------------------------------
+     Cursor glow (desktop, pointer:fine only)
+     --------------------------------------------------------------------- */
+  const cursorGlow = document.getElementById('cursorGlow');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    let glowX = window.innerWidth / 2, glowY = window.innerHeight / 2;
+    let renderedX = glowX, renderedY = glowY;
+    window.addEventListener('mousemove', (e) => {
+      glowX = e.clientX; glowY = e.clientY;
+      cursorGlow.classList.add('is-active');
+    });
+    document.addEventListener('mouseleave', () => cursorGlow.classList.remove('is-active'));
+    function renderGlow() {
+      renderedX += (glowX - renderedX) * 0.12;
+      renderedY += (glowY - renderedY) * 0.12;
+      cursorGlow.style.transform = `translate(${renderedX}px, ${renderedY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(renderGlow);
+    }
+    renderGlow();
+  }
+ 
+  /* ---------------------------------------------------------------------
+     Timeline: gold line fills as you scroll past chapters
+     --------------------------------------------------------------------- */
+  const timelineFill = document.getElementById('timelineFill');
+  const timelineLine = document.querySelector('.timeline__line');
+  if (timelineFill && timelineLine) {
+    function updateTimelineFill() {
+      const rect = timelineLine.getBoundingClientRect();
+      const viewportCenter = window.innerHeight * 0.55;
+      const visible = viewportCenter - rect.top;
+      const pct = Math.min(1, Math.max(0, visible / rect.height));
+      timelineFill.style.height = `${pct * 100}%`;
+    }
+    window.addEventListener('scroll', updateTimelineFill, { passive: true });
+    updateTimelineFill();
+  }
+ 
+  /* ---------------------------------------------------------------------
+     Hero sparkle motes
+     --------------------------------------------------------------------- */
+  const sparkleField = document.getElementById('sparkleField');
+  if (sparkleField) {
+    const count = window.innerWidth < 600 ? 10 : 18;
+    for (let i = 0; i < count; i++) {
+      const m = document.createElement('span');
+      m.className = 'sparkle-mote';
+      const size = 2 + Math.random() * 3;
+      m.style.width = `${size}px`;
+      m.style.height = `${size}px`;
+      m.style.left = `${Math.random() * 100}%`;
+      m.style.top = `${20 + Math.random() * 70}%`;
+      m.style.animationDuration = `${4 + Math.random() * 5}s`;
+      m.style.animationDelay = `${Math.random() * 4}s`;
+      sparkleField.appendChild(m);
+    }
+  }
+ 
+  /* ---------------------------------------------------------------------
      Hero parallax (subtle, on pointer + scroll)
      --------------------------------------------------------------------- */
   const heroBg = document.querySelector('.hero__bg');
@@ -418,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
  
     if (!surpriseUsed) {
       surpriseUsed = true;
-      surpriseBtn.querySelector('span').textContent = 'Once More For Luck';
+      surpriseBtn.querySelector('.surprise__btn-label').textContent = 'Once More For Luck';
     }
   });
  
@@ -434,13 +517,14 @@ document.addEventListener('DOMContentLoaded', () => {
     fill.style.strokeDashoffset = `${CIRCUMFERENCE}`;
   });
  
-  function animateCount(el, target, duration = 1800) {
+  function animateCount(el, target, duration = 1800, onDone) {
     const start = performance.now();
     function step(now) {
       const progress = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       el.textContent = Math.round(eased * target);
       if (progress < 1) requestAnimationFrame(step);
+      else if (onDone) onDone();
     }
     requestAnimationFrame(step);
   }
@@ -449,10 +533,11 @@ document.addEventListener('DOMContentLoaded', () => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const wish = entry.target;
+        const ringEl = wish.querySelector('.wish__ring');
         const numberEl = wish.querySelector('.wish__number');
         const fillEl = wish.querySelector('.wish__fill');
         const target = parseInt(numberEl.dataset.count, 10);
-        animateCount(numberEl, target);
+        animateCount(numberEl, target, 1800, () => ringEl.classList.add('is-complete'));
         const offset = CIRCUMFERENCE - (target / 100) * CIRCUMFERENCE;
         requestAnimationFrame(() => { fillEl.style.strokeDashoffset = offset; });
         wishObserver.unobserve(wish);
@@ -463,4 +548,3 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wish').forEach(w => wishObserver.observe(w));
  
 });
- 
